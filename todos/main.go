@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"todos/internal/config"
+	db "todos/internal/models"
 	pb "todos/pb"
 
 	"google.golang.org/grpc"
@@ -18,6 +19,13 @@ type server struct {
 func main()  {
 	// env
 	env := config.ReadEnv()
+
+	// db
+	db.ConnectDatabase(env)
+
+	if (env.RUN_AUTO_MIGRATION) {
+		db.RunAutoMigartion()
+	}
 
 	// grpc server
 	address := fmt.Sprintf(":%d", env.PORT)
