@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"os"
+	"todos/internal/config"
 	pb "todos/pb"
 
 	"google.golang.org/grpc"
@@ -16,8 +16,11 @@ type server struct {
 }
 
 func main()  {
-	port := os.Getenv("PORT")
-	address := fmt.Sprintf(":%s", port)
+	// env
+	env := config.ReadEnv()
+
+	// grpc server
+	address := fmt.Sprintf(":%d", env.PORT)
 	listener, err := net.Listen("tcp", address)
 	if err != nil {
 		panic(err)
