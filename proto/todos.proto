@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option go_package = "todos/pb";
+
+service TodoService {
+  rpc GetTodo (Empty) returns (Todo);
+  rpc GetAllTodos (Empty) returns (Todos);
+
+  rpc CreateTodo (CreateTodoRequest) returns (Todo);
+  rpc UpdateTodoContent (UpdateTodoContentRequest) returns (Todo);
+  rpc MarkTodoAsComplete (UpdateTodoCompletenessRequest) returns (Todo);
+  rpc MarkTodoAsInComplete (UpdateTodoCompletenessRequest) returns (Todo);
+
+  rpc DeleteTodo (DeleteTodoRequest) returns (Todo);
+}
+
+message Todo {
+  uint32 id = 1;
+  string content = 2;
+  bool isComplete = 3;
+}
+
+message Todos {
+  repeated Todo todos = 1;
+}
+
+message CreateTodoRequest {
+  string content = 1;
+}
+
+message UpdateTodoContentRequest {
+  uint32 id = 1;
+  string content = 2;
+}
+
+message UpdateTodoCompletenessRequest {
+  uint32 id = 1;
+}
+
+message DeleteTodoRequest {
+  uint32 id = 1;
+}
+
+message Empty {
+
+}
