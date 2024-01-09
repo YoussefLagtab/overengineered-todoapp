@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TodoServiceClient interface {
-	GetTodo(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Todo, error)
+	GetTodo(ctx context.Context, in *GetTodoRequest, opts ...grpc.CallOption) (*Todo, error)
 	GetAllTodos(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Todos, error)
 	CreateTodo(ctx context.Context, in *CreateTodoRequest, opts ...grpc.CallOption) (*Todo, error)
 	UpdateTodoContent(ctx context.Context, in *UpdateTodoContentRequest, opts ...grpc.CallOption) (*Todo, error)
@@ -39,7 +39,7 @@ func NewTodoServiceClient(cc grpc.ClientConnInterface) TodoServiceClient {
 	return &todoServiceClient{cc}
 }
 
-func (c *todoServiceClient) GetTodo(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Todo, error) {
+func (c *todoServiceClient) GetTodo(ctx context.Context, in *GetTodoRequest, opts ...grpc.CallOption) (*Todo, error) {
 	out := new(Todo)
 	err := c.cc.Invoke(ctx, "/TodoService/GetTodo", in, out, opts...)
 	if err != nil {
@@ -106,7 +106,7 @@ func (c *todoServiceClient) DeleteTodo(ctx context.Context, in *DeleteTodoReques
 // All implementations must embed UnimplementedTodoServiceServer
 // for forward compatibility
 type TodoServiceServer interface {
-	GetTodo(context.Context, *Empty) (*Todo, error)
+	GetTodo(context.Context, *GetTodoRequest) (*Todo, error)
 	GetAllTodos(context.Context, *Empty) (*Todos, error)
 	CreateTodo(context.Context, *CreateTodoRequest) (*Todo, error)
 	UpdateTodoContent(context.Context, *UpdateTodoContentRequest) (*Todo, error)
@@ -120,7 +120,7 @@ type TodoServiceServer interface {
 type UnimplementedTodoServiceServer struct {
 }
 
-func (UnimplementedTodoServiceServer) GetTodo(context.Context, *Empty) (*Todo, error) {
+func (UnimplementedTodoServiceServer) GetTodo(context.Context, *GetTodoRequest) (*Todo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTodo not implemented")
 }
 func (UnimplementedTodoServiceServer) GetAllTodos(context.Context, *Empty) (*Todos, error) {
@@ -155,7 +155,7 @@ func RegisterTodoServiceServer(s grpc.ServiceRegistrar, srv TodoServiceServer) {
 }
 
 func _TodoService_GetTodo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(GetTodoRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -167,7 +167,7 @@ func _TodoService_GetTodo_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: "/TodoService/GetTodo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TodoServiceServer).GetTodo(ctx, req.(*Empty))
+		return srv.(TodoServiceServer).GetTodo(ctx, req.(*GetTodoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

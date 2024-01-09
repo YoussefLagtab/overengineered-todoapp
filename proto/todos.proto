@@ -3,7 +3,7 @@ syntax = "proto3";
 option go_package = "todos/pb";
 
 service TodoService {
-  rpc GetTodo (Empty) returns (Todo);
+  rpc GetTodo (GetTodoRequest) returns (Todo);
   rpc GetAllTodos (Empty) returns (Todos);
 
   rpc CreateTodo (CreateTodoRequest) returns (Todo);
@@ -22,6 +22,10 @@ message Todo {
 
 message Todos {
   repeated Todo todos = 1;
+}
+
+message GetTodoRequest {
+  uint32 id = 1;
 }
 
 message CreateTodoRequest {
