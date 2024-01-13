@@ -18,11 +18,13 @@ func (ts *TodoService) GetTodo(id uint32) (*db.Todo, error) {
 }
 
 // TODO: add pagination
-func (ts *TodoService) GetAllTodos() []db.Todo {
+func (ts *TodoService) GetAllTodos() ([]db.Todo, error) {
 	var todos []db.Todo
-	db.DB.Order("id ASC").Find(&todos)
+	if err :=	db.DB.Order("id ASC").Find(&todos).Error; err != nil {
+		return nil, err
+	}
 
-	return todos
+	return todos, nil
 }
 
 func (ts *TodoService) CreateTodo(content string) (*db.Todo, error) {
