@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"log"
 	"todos/internal/config"
 
 	"gorm.io/driver/postgres"
@@ -14,11 +15,12 @@ func ConnectDatabase(env *config.Env) {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable",
 		env.DB_HOST, env.DB_USER, env.DB_PASS, env.DB_NAME, env.DB_PORT)
 
-	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+		database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		panic("Failed to connect to database!")
 	}
+	log.Println("Database connected!")
 	DB = database
 }
 

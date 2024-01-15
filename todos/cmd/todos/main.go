@@ -5,6 +5,8 @@ import (
 	"log"
 	"net"
 	"todos/internal/config"
+	db "todos/internal/models"
+
 	grpcServer "todos/internal/grpc"
 	"todos/internal/pb"
 
@@ -17,6 +19,13 @@ func main() {
 	// read env
 	env := config.ReadEnv()
 
+	// db
+	db.ConnectDatabase(env)
+
+	if (env.RUN_AUTO_MIGRATION) {
+		db.RunAutoMigartion()
+	}
+
 	// create tcp server
 	address := fmt.Sprintf(":%d", env.PORT)
 	listener, err := net.Listen("tcp", address)
@@ -25,7 +34,6 @@ func main() {
 	}
 
 	// register grpc server
-
 	s := grpc.NewServer()
 	reflection.Register(s)
 	pb.RegisterTodoServiceServer(s, &grpcServer.Server{})
