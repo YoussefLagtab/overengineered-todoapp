@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-option go_package = "todos/pb";
+package todo;
+
+option go_package = "todos/internal/pb";
 
 service TodoService {
   rpc GetTodo (GetTodoRequest) returns (Todo);
