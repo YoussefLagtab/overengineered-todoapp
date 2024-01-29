@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  todos_db:
+    image: postgres
+    restart: always
+    user: postgres
+    environment:
+      - PGPORT=${TODOS_DB_PORT}
+      - POSTGRES_USER=${TODOS_DB_USER}
+      - POSTGRES_PASSWORD=${TODOS_DB_PASS}
+      - POSTGRES_DB=${TODOS_DB_NAME}
+    volumes:
+      - todos_db_data:/var/lib/postgresql/data
+    networks:
+      - todos_db_network
+
+  todos:
+    build:
+      context: ./todos
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - ${TODOS_PORT}:${TODOS_PORT}
+    depends_on:
+      - todos_db
+    environment:
+      - DB_HOST=todos_db
+      - DB_PORT=${TODOS_DB_PORT}
+      - DB_USER=${TODOS_DB_USER}
+      - DB_PASS=${TODOS_DB_PASS}
+      - DB_NAME=${TODOS_DB_NAME}
+      - RUN_AUTO_MIGRATION=${TODOS_RUN_AUTO_MIGRATION}
+      - PORT=${TODOS_PORT}
+    networks:
+      - todos_db_network
+      - gateway_network
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - ${GATEWAY_PORT}:${GATEWAY_PORT}
+    depends_on:
+      - todos
+    environment:
+      - TODOS_SERVICE_URL=todos:${TODOS_PORT}
+      - PORT=${GATEWAY_PORT}
+    volumes:
+      - ./proto:/proto
+    networks:
+      - gateway_network
+
+volumes:
+  todos_db_data:
+
+networks:
+  gateway_network:
+    driver: bridge
+  todos_db_network:
+    driver: bridge
