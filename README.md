@@ -7,7 +7,9 @@ This is a fun project to discover `grpc` protocol, and Golang.
 - copy `.env.example` to `.env` and change the values, or not :)
 - run: ``env `cat .env | grep -v ^#` docker compose up -d``
 
-# Endpoints:
+  *apis will be available on port `$GATEWAY_PORT` (defined in `.env`)*
+
+# APIs:
 
 -  `GET /todos`
 -  `GET /todos/:id`
