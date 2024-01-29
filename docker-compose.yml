@@ -20,8 +20,6 @@ services:
       context: ./todos
       dockerfile: Dockerfile
     restart: always
-    ports:
-      - ${TODOS_PORT}:${TODOS_PORT}
     depends_on:
       - todos_db
     environment:
